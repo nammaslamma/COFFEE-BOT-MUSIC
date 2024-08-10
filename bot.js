@@ -9,8 +9,40 @@ const { SoundCloudPlugin } = require('@distube/soundcloud');
 const { DeezerPlugin } = require('@distube/deezer');
 const { YouTubePlugin } = require('@distube/youtube');
 const { DirectLinkPlugin } = require('@distube/direct-link');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
+const { createReadStream } = require('fs');
 const path = require('path');
 const subscription = connection.subscribe(audioPlayer);
+
+module.exports = {
+data: new SlashCommandBuilder()
+.setName('play')
+.setDescription('Play audio in the voice channel'),
+async execute(interaction) {
+const member = interaction.guild.members.cache.get(interaction.user.id);
+if (member.voice.channel) {
+try {
+const audioPlayer = createAudioPlayer();
+const audioFilePath = path.resolve(__dirname, 'benguin.mp3');
+const audioResource = createAudioResource(createReadStream(audioFilePath));
+audioPlayer.play(audioResource);
+audioPlayer.on(AudioPlayerStatus.Idle, () => {
+// Optionally destroy the connection when playback is complete
+// connection.destroy();
+});
+interaction.reply('Playing audio in the voice channel!');
+} catch (error) {
+console.error('Error:', error);
+interaction.reply('Error playing audio. Check console for details.');
+}
+} else {
+interaction.reply('You need to be in a voice channel to use this command!');
+}
+},
+};
+
+
 
 const client = new Client({
     intents: [
