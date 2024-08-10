@@ -10,6 +10,7 @@ const { DeezerPlugin } = require('@distube/deezer');
 const { YouTubePlugin } = require('@distube/youtube');
 const { DirectLinkPlugin } = require('@distube/direct-link');
 const path = require('path');
+const subscription = connection.subscribe(audioPlayer);
 
 const client = new Client({
     intents: [
