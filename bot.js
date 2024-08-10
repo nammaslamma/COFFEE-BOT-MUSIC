@@ -13,6 +13,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { createAudioPlayer, createAudioResource, AudioPlayerStatus, joinVoiceChannel } = require('@discordjs/voice');
 const { createReadStream } = require('fs');
 const path = require('path');
+const subscription = connection.subscribe(audioPlayer);
 
 module.exports = {
     data: new SlashCommandBuilder()
